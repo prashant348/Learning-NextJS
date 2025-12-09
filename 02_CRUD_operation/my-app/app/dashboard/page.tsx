@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { addItem } from "@/actions/addItem";
+import { deleteItem } from "@/actions/deleteItem";
 
 interface Item {
   _id: string;
@@ -14,7 +15,7 @@ export default function Dashboard() {
 
   const [itemsArray, setItemsArray] = useState<Item[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
-  const [ error, setError ] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   const getItems = async (): Promise<void> => {
     setError("")
@@ -71,8 +72,18 @@ export default function Dashboard() {
           </button>
         </form>
       </div>
+        
+      {/* DELTE ITEM LOGIC */}
+      <div className="bg-[#1f1f1f] w-[300px] h-[200px]">
+        <form action={deleteItem} className="flex flex-col w-full h-full gap-2">
+          <input type="text" placeholder="Item name to delete" name="name" />
+          <button type="submit" className="border p-2">
+            Delete
+          </button>
+        </form>
+      </div>
 
-      
+
     </div>
   )
 }
