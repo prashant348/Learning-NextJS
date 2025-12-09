@@ -43,9 +43,12 @@ export default function Dashboard() {
     }
   }
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const name = item.itemName;
+    if (!name) return;
     try {
-      const res = await fetch("/api/items", {
+      const res = await fetch(`/api/items/${encodeURIComponent(name)}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -110,7 +113,7 @@ export default function Dashboard() {
 
       {/* UPDATE ITEM LOGIC */}
       <div className="bg-[#1f1f1f] w-[300px] h-[200px]">
-        <form action={handleUpdate} className="flex flex-col w-full h-full gap-2">
+        <form onSubmit={handleUpdate} className="flex flex-col w-full h-full gap-2">
           <input
             type="text"
             placeholder="Item name whose price you want to change"

@@ -16,14 +16,15 @@ export async function GET() {
     }
 }
 
-export async function PUT(req: Request) {
+export async function PUT(req: Request, ctx: { params: { name: string } | Promise<{ name: string }> }) {
     try {
         await connectDB();
+        const params = await ctx.params;
         const body = await req.json();
-        const { itemName, itemNewPrice } = body;
+        const { itemNewPrice } = body;
         // Mongoose by default returns the document before update. Use the option to return the updated doc (and enable validators).
         const item = await Item.findOneAndUpdate(
-            { name: itemName }, 
+            { name: params.name }, 
             { price: itemNewPrice }, 
              { new: true, runValidators: true } // <-- return updated doc & validate
         );
