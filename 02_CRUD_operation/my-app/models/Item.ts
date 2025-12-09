@@ -5,6 +5,7 @@ interface Item extends Document {
     name: string;
     price: number;
 }
+
 const ItemSchema = new Schema<Item>({
     name: {
         type: String,
@@ -21,5 +22,5 @@ const ItemSchema = new Schema<Item>({
 // FIX: model ko guard karo (agar already compiled ho to reuse karo) OPTIONAL: aur DB connection ko global cache karo.
 
 
-// model gaurding
+// guard against model overwrite in dev
 export const Item: Model<Item> = (mongoose.models.Item as Model<Item>) || mongoose.model<Item>("Item", ItemSchema);

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { addItem } from "@/actions/addItem";
 
 interface Item {
-  id: number;
+  _id: string;
   name: string;
   price: number;
 }
@@ -33,8 +34,9 @@ export default function Dashboard() {
     }
   }
 
+
   return (
-    <div className="flex">
+    <div className="flex gap-2">
       {/* DATA READING AND REDERING LOGIC */}
       <div>
         <div
@@ -42,7 +44,7 @@ export default function Dashboard() {
         >
           {isFetching && <p>Loading...</p>}
           {!isFetching && !error && itemsArray.map((item) => (
-            <div key={item.id} className="w-full h-[50px] shrink-0 bg-[#2f2f2f] flex justify-between items-center px-2">
+            <div key={item._id} className="w-full h-[50px] shrink-0 bg-[#2f2f2f] flex justify-between items-center px-2">
               <p>{item.name}</p>
               <p>{item.price}</p>
             </div>
@@ -57,6 +59,17 @@ export default function Dashboard() {
         >
           Get Items
         </button>
+      </div>
+
+      {/* DATA CREATING LOGIC */}
+      <div className="bg-[#1f1f1f] w-[300px] h-[200px]">
+        <form action={addItem} className="flex flex-col w-full h-full gap-2">
+          <input type="text" placeholder="Item name" name="name" />
+          <input type="number" placeholder="Item price" name="price" />
+          <button type="submit" className="border p-2">
+            Submit
+          </button>
+        </form>
       </div>
 
       
