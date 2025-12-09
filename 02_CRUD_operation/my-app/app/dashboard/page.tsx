@@ -10,12 +10,20 @@ interface Item {
   price: number;
 }
 
+interface UpdatedItem {
+  itemName: string,
+  itemNewPrice: number
+}
 
 export default function Dashboard() {
 
   const [itemsArray, setItemsArray] = useState<Item[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [item, setItem] = useState<UpdatedItem>({
+    itemName: "",
+    itemNewPrice: 0
+  });
 
   const getItems = async (): Promise<void> => {
     setError("")
@@ -32,6 +40,23 @@ export default function Dashboard() {
       setError("error in fetching")
     } finally {
       setIsFetching(false);
+    }
+  }
+
+  const handleUpdate = async () => {
+    try {
+      const res = await fetch("/api/items", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(item)
+      });
+      if (!res.ok) throw new Error("error in updating item");
+      const data = await res.json();
+      console.log("item updated: ", data);
+    } catch (e) {
+      console.error("error in updating item: ", e)
     }
   }
 
@@ -72,13 +97,36 @@ export default function Dashboard() {
           </button>
         </form>
       </div>
-        
+
       {/* DELTE ITEM LOGIC */}
       <div className="bg-[#1f1f1f] w-[300px] h-[200px]">
         <form action={deleteItem} className="flex flex-col w-full h-full gap-2">
           <input type="text" placeholder="Item name to delete" name="name" />
           <button type="submit" className="border p-2">
             Delete
+          </button>
+        </form>
+      </div>
+
+      {/* UPDATE ITEM LOGIC */}
+      <div className="bg-[#1f1f1f] w-[300px] h-[200px]">
+        <form action={handleUpdate} className="flex flex-col w-full h-full gap-2">
+          <input
+            type="text"
+            placeholder="Item name whose price you want to change"
+            name="name" 
+            value={item.itemName}
+            onChange={(e) => setItem({...item, itemName: e.target.value})}
+            />
+          <input
+            type="number"
+            placeholder="Item new price"
+            name="newPrice" 
+            value={item.itemNewPrice}
+            onChange={(e) => setItem({...item, itemNewPrice: Number(e.target.value)})}
+            />
+          <button type="submit" className="border p-2">
+            Update
           </button>
         </form>
       </div>

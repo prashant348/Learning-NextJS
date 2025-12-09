@@ -15,3 +15,23 @@ export async function GET() {
         return NextResponse.json({ "error in fetching items": e });
     }
 }
+
+export async function PUT(req: Request) {
+    try {
+        await connectDB();
+        const body = await req.json();
+        const { itemName, itemNewPrice } = body;
+        // Mongoose by default returns the document before update. Use the option to return the updated doc (and enable validators).
+        const item = await Item.findOneAndUpdate(
+            { name: itemName }, 
+            { price: itemNewPrice }, 
+             { new: true, runValidators: true } // <-- return updated doc & validate
+        );
+        if (!item) throw new Error("item not found");
+        console.log("item updated: ", item);
+        return NextResponse.json(item);
+    } catch (e) {
+        console.error("error in updatting item: ", e);
+        return NextResponse.json({ "error in updatting item": e });
+    }
+}
